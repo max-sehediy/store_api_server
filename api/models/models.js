@@ -12,11 +12,17 @@ const User = sequelize.define(
 const Basket = sequelize.define(
   'basket', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  userId: { type: DataTypes.INTEGER },
+  isComplete: { type: DataTypes.BOOLEAN, defaultValue: false }
+
 });
 
 const BasketDevice = sequelize.define(
   'basket_device', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  deviceId: { type: DataTypes.INTEGER },
+  basketId: { type: DataTypes.INTEGER },
+  count: { type: DataTypes.INTEGER, defaultValue: 1 }
 });
 
 const Device = sequelize.define(

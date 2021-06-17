@@ -8,7 +8,7 @@ const fileUpload = require('express-fileupload')
 const router = require('./api/routes')
 const errorHandler = require('./api/middleware/ErrorHandingMiddleware');
 const path = require('path');
-const { static } = require('express')
+
 
 // 20b2d0a6-c734-4f4a-8d18-ab86de251de2.jpg
 
