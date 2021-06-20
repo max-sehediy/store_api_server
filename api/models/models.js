@@ -13,7 +13,7 @@ const Basket = sequelize.define(
   'basket', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   userId: { type: DataTypes.INTEGER },
-  isComplete: { type: DataTypes.BOOLEAN, defaultValue: false }
+  isCompleted: { type: DataTypes.BOOLEAN, defaultValue: false }
 
 });
 

@@ -15,7 +15,7 @@ class BasketController {
     async getOne(req, res) {
         const { email } = req.params
         const { id: userId } = await User.findOne({ where: { email } })
-        const { id: basketId } = await Basket.findOne({ where: { userId, isComplete: false }, })
+        const { id: basketId } = await Basket.findOne({ where: { userId, isCompleted: false }, })
         const devices = await BasketDevice.findAll({ where: { basketId } })
 
         res.json(devices)
@@ -23,21 +23,27 @@ class BasketController {
     async create(req, res, next) {
         try {
             let { userId, deviceId, count = 1 } = req.body
-            const { id: basketId } = await Basket.create({ userId })
-            const result = await BasketDevice.create({ basketId, deviceId, count })
-            return res.json(result)
+            const user_basket_isCompleted = await Basket.findOne({ where: { userId, isCompleted: false } })
+            if (user_basket_isCompleted) {
+                const create_basket_device = await BasketDevice.create({ basketId: user_basket_isCompleted.id, deviceId, count })
+                const result = await BasketDevice.findAll({ basketId: user_basket_isCompleted.id })
+                return res.json(result)
+            } else {
+                const { id: basketId } = await Basket.create({ userId })
+                const result = await BasketDevice.create({ basketId, deviceId, count })
+                return res.json(result)
+            }
         } catch (error) {
             console.log(`error`, error)
             next(ApiError.badRequest(error.message))
         }
     }
     async update(req, res, next) {
-        const { basketDeviceId: id, deviceId, count } = req.body
+        const { basketDeviceId: id, deviceId, count = 1 } = req.body
         const basket_device = await BasketDevice.findOne({ where: { id } })
         basket_device.deviceId = deviceId
         basket_device.count = count
         const updateData = await basket_device.save()
-        // .then(data => data).catch(error => console.log(error))
         res.json(updateData)
     }
     async delete(req, res, next) {
